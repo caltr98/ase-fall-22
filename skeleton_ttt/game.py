@@ -1,5 +1,5 @@
 from itertools import cycle
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 
 class Player(NamedTuple):
@@ -70,8 +70,23 @@ class Game:
         self._current_moves[row][col] = move
 
         # check whether the current move leads to a winning combo.
-        if self._current_moves in self._get_winning_combos():
-            self._has_winner = True
+        for combo in self._get_winning_combos():
+            curr_label = None
+            is_winner = True
+            moves_count = 0
+            for row, col in combo:
+                if self._current_moves[row][col].label == '':
+                    continue
+
+                if curr_label is None:
+                    curr_label = self._current_moves[row][col].label
+                elif curr_label != self._current_moves[row][col].label:
+                    is_winner = False
+                    break
+                moves_count += 1
+            if is_winner and moves_count == self.board_size:
+                self._has_winner = True
+                break
 
         self._moves_number += 1
 
