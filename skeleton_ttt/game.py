@@ -48,14 +48,18 @@ class Game:
         second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
         return rows + columns + [first_diagonal, second_diagonal]
 
-    def is_valid_move(self, move):
+    def is_valid_move(self, move) -> Bool:
         """Return True if move is valid, and False otherwise."""
         row, col = move.row, move.col
-        # TODO: check that the current move has not been played already 
+        # TODO: check that the current move has not been played already
         # and that there is no winner yet. Note that non-played cells
-        # contain an empty string (i.e. ""). 
+        # contain an empty string (i.e. "").
         # Use variables no_winner and move_not_played.
-        
+        move_not_played, no_winner = True, True
+        if self._current_moves[row, col].label != "":
+            move_not_played = False
+        if self.has_winner():
+            no_winner = False
         return no_winner and move_not_played
 
     def process_move(self, move):
@@ -63,7 +67,7 @@ class Game:
         row, col = move.row, move.col
         self._current_moves[row][col] = move
         # TODO: check whether the current move leads to a winning combo.
-        # Do not return any values but set variables  self._has_winner 
+        # Do not return any values but set variables  self._has_winner
         # and self.winner_combo in case of winning combo.
         # Hint: you can scan pre-computed winning combos in self._winning_combos
 
@@ -81,7 +85,7 @@ class Game:
         """Return a toggled player."""
         # TODO: switches self.current_player to the other player.
         # Hint: https://docs.python.org/3/library/functions.html#next
-       
+
     def reset_game(self):
         """Reset the game state to play again."""
         for row, row_content in enumerate(self._current_moves):
