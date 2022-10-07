@@ -1,6 +1,7 @@
 from itertools import cycle
 from typing import NamedTuple
 
+
 class Player(NamedTuple):
     label: str
     color: str
@@ -28,6 +29,7 @@ class Game:
         self._current_moves = []
         self._has_winner = False
         self._winning_combos = []
+        self._moves_number = 0
         self._setup_board()
 
     def _setup_board(self):
@@ -66,14 +68,16 @@ class Game:
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
+
+        # check whether the current move leads to a winning combo.
         if self._current_moves in self._get_winning_combos():
             self._has_winner = True
 
-        # TODO: check whether the current move leads to a winning combo.
+        self._moves_number += 1
+
         # Do not return any values but set variables  self._has_winner
         # and self.winner_combo in case of winning combo.
         # Hint: you can scan pre-computed winning combos in self._winning_combos
-
 
     def has_winner(self):
         """Return True if the game has a winner, and False otherwise."""
@@ -81,8 +85,9 @@ class Game:
 
     def is_tied(self):
         """Return True if the game is tied, and False otherwise."""
-        # TODO: check whether a tie was reached.
+        # check whether a tie was reached.
         # There is no winner and all moves have been tried.
+        return self._moves_number == 9 and not self._has_winner
 
     def toggle_player(self):
         """Return a toggled player."""
@@ -90,7 +95,7 @@ class Game:
         # Hint: https://docs.python.org/3/library/functions.html#next
 
         self.current_player = next(self._players)
-       
+
     def reset_game(self):
         """Reset the game state to play again."""
         for row, row_content in enumerate(self._current_moves):
@@ -98,3 +103,4 @@ class Game:
                 row_content[col] = Move(row, col)
         self._has_winner = False
         self.winner_combo = []
+        self._moves_number = 0
