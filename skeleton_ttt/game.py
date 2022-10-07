@@ -48,7 +48,7 @@ class Game:
         second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
         return rows + columns + [first_diagonal, second_diagonal]
 
-    def is_valid_move(self, move) -> Bool:
+    def is_valid_move(self, move) -> bool:
         """Return True if move is valid, and False otherwise."""
         row, col = move.row, move.col
         # TODO: check that the current move has not been played already
@@ -56,7 +56,7 @@ class Game:
         # contain an empty string (i.e. "").
         # Use variables no_winner and move_not_played.
         move_not_played, no_winner = True, True
-        if self._current_moves[row, col].label != "":
+        if self._current_moves[row][col].label != "":
             move_not_played = False
         if self.has_winner():
             no_winner = False
@@ -66,6 +66,9 @@ class Game:
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
+        if self._current_moves in self._get_winning_combos():
+            self._has_winner = True
+
         # TODO: check whether the current move leads to a winning combo.
         # Do not return any values but set variables  self._has_winner
         # and self.winner_combo in case of winning combo.
