@@ -68,26 +68,26 @@ class Game:
         """Process the current move and check if it's a win."""
         row, col = move.row, move.col
         self._current_moves[row][col] = move
-
         # check whether the current move leads to a winning combo.
         for combo in self._get_winning_combos():
             curr_label = None
             is_winner = True
             moves_count = 0
+            winningmoves = []
             for row, col in combo:
                 if self._current_moves[row][col].label == '':
                     continue
-
                 if curr_label is None:
                     curr_label = self._current_moves[row][col].label
                 elif curr_label != self._current_moves[row][col].label:
                     is_winner = False
                     break
+                winningmoves.append((row, col))
                 moves_count += 1
             if is_winner and moves_count == self.board_size:
                 self._has_winner = True
                 break
-
+        self.winner_combo = winningmoves
         self._moves_number += 1
 
     def has_winner(self):
